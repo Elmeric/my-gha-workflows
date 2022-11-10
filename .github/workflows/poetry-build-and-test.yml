@@ -46,12 +46,12 @@ jobs:
     runs-on: "${{ matrix.os }}"
     timeout-minutes: "${{ inputs.timeout-minutes }}"
     steps:
-      - if: ${{ runner.os == 'Windows' }}
-        name: Use GNU tar
-        shell: cmd
-        run: |
-          echo "Adding GNU tar to PATH"
-          echo C:\Program Files\Git\usr\bin>>"%GITHUB_PATH%"
+#      - if: ${{ runner.os == 'Windows' }}
+#        name: Use GNU tar
+#        shell: cmd
+#        run: |
+#          echo "Adding GNU tar to PATH"
+#          echo C:\Program Files\Git\usr\bin>>"%GITHUB_PATH%"
       - name: Check out code
         uses: actions/checkout@v3
       - name: Setup Python
@@ -64,7 +64,7 @@ jobs:
         with:
           path: ~/.local
           key: "poetry-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ inputs.poetry-version }}-0"
-        if: ${{ inputs.poetry-cache-venv }}
+        if: ${{ inputs.poetry-cache-venv }} && ${{ runner.os != 'Windows' }}
       - name: Setup Poetry
         uses: snok/install-poetry@v1
         with:
@@ -77,7 +77,7 @@ jobs:
         with:
           path: .venv
           key: pydeps-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
-        if: ${{ inputs.poetry-cache-install }}
+        if: ${{ inputs.poetry-cache-install }} && ${{ runner.os != 'Windows' }}
       - name: Install dependencies
         shell: bash
         run: |
