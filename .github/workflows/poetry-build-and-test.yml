@@ -64,7 +64,8 @@ jobs:
         with:
           path: ~/.local
           key: "poetry-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ inputs.poetry-version }}-0"
-        if: ${{ inputs.poetry-cache-venv }} && ${{ runner.os != 'windows-latest' }}
+        if: runner.os != 'Windows'
+#        if: ${{ inputs.poetry-cache-install }} && ${{ runner.os != 'windows-latest' }}
       - name: Setup Poetry
         uses: snok/install-poetry@v1
         with:
@@ -77,7 +78,8 @@ jobs:
         with:
           path: .venv
           key: pydeps-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
-        if: ${{ inputs.poetry-cache-install }} && ${{ runner.os != 'windows-latest' }}
+        if: runner.os != 'Windows'
+#        if: ${{ inputs.poetry-cache-venv }} && ${{ runner.os != 'windows-latest' }}
       - name: Install dependencies
         shell: bash
         run: |
