@@ -65,7 +65,6 @@ jobs:
           path: ~/.local
           key: "poetry-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ inputs.poetry-version }}-0"
         if: ${{ inputs.poetry-cache-install && runner.os != 'Windows' }}
-#        if: ${{ inputs.poetry-cache-install }} && ${{ runner.os != 'windows-latest' }}
       - name: Setup Poetry
         uses: snok/install-poetry@v1
         with:
@@ -79,7 +78,6 @@ jobs:
           path: .venv
           key: pydeps-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
         if: ${{ inputs.poetry-cache-venv && runner.os != 'Windows' }}
-#        if: ${{ inputs.poetry-cache-venv }} && ${{ runner.os != 'windows-latest' }}
       - name: Install dependencies
         shell: bash
         run: |
@@ -96,26 +94,26 @@ jobs:
         run: |
           # Run the test suite
           ${{ inputs.test-suite-command }}
-#      - name: Upload coverage data to coveralls.io
-#        shell: bash
-#        env:
-#          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-#          COVERALLS_FLAG_NAME: "${{ runner.os }}-python${{ matrix.python }}"
-#          COVERALLS_PARALLEL: true
-#        run: |
-#          # Upload coverage data to coveralls.io
-#          poetry run coveralls --service=github
-#  coveralls:
-#    name: Indicate completion to coveralls.io
-#    needs: build
-#    runs-on: ubuntu-latest
-#    container: python:3-slim
-#    steps:
-#    - name: Finished
-#      shell: bash
-#      env:
-#        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-#      run: |
-#        # Indicate completion to coveralls.io
-#        pip3 install --upgrade coveralls
-#        coveralls --service=github --finish
+      - name: Upload coverage data to coveralls.io
+        shell: bash
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          COVERALLS_FLAG_NAME: "${{ runner.os }}-python${{ matrix.python }}"
+          COVERALLS_PARALLEL: true
+        run: |
+          # Upload coverage data to coveralls.io
+          poetry run coveralls --service=github
+  coveralls:
+    name: Indicate completion to coveralls.io
+    needs: build
+    runs-on: ubuntu-latest
+    container: python:3-slim
+    steps:
+    - name: Finished
+      shell: bash
+      env:
+        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      run: |
+        # Indicate completion to coveralls.io
+        pip3 install --upgrade coveralls
+        coveralls --service=github --finish
