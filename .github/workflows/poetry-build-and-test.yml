@@ -28,7 +28,7 @@ on:
         description: "Shell command used to execute the test suite"
         required: false
         type: string
-        default: "./run suite"
+        default: "inv test.suite"
       timeout-minutes:
         description: "Job timeout in minutes"
         required: false
