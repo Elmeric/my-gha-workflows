@@ -93,6 +93,7 @@ jobs:
         shell: bash
         run: |
           # Run the test suite
+          source $VENV
           ${{ inputs.test-suite-command }}
       - name: Upload coverage data to coveralls.io
         shell: bash
