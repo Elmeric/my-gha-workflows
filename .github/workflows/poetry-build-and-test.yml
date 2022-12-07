@@ -1,3 +1,4 @@
+# Cf. https://github.com/pyTooling/Actions/#reusable-workflows
 name: Build and Test
 on:
   workflow_call:
@@ -40,6 +41,24 @@ jobs:
       matrix:
         os: "${{ fromJson(inputs.matrix-os-version) }}"
         python: "${{ fromJson(inputs.matrix-python-version) }}"
+        exclude:
+          - os: macos-latest
+            python: 3.7
+          - os: macos-latest
+            python: 3.8
+          - os: macos-latest
+            python: 3.9
+          - os: macos-latest
+            python: 3.10
+          - os: windows-latest
+            python: 3.7
+          - os: windows-latest
+            python: 3.8
+          - os: windows-latest
+            python: 3.9
+          - os: windows-latest
+            python: 3.10
+
     defaults:
       run:
         shell: bash
