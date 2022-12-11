@@ -1,0 +1,80 @@
+name: Unit Testing
+
+on:
+  workflow_call:
+    inputs:
+      jobs:
+        description: 'JSON list with environment fields, telling the system and Python versions to run tests with.'
+        required: true
+        type: string
+      poetry-version:
+        description: "Version of Poetry to use for the build (>=1.2.0)"
+        required: true
+        type: string
+      commands:
+        description: 'Commands to run the unit tests.'
+        required: true
+        type: string
+
+jobs:
+
+  UnitTesting:
+    name: ${{ matrix.sysicon }} ${{ matrix.pyicon }} Unit Tests using Python ${{ matrix.python }}
+    runs-on: ${{ matrix.runs-on }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJson(inputs.jobs) }}
+
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
+
+    steps:
+      - name: ⏬ Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 🐍 Setup Python ${{ matrix.python }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Cache poetry install
+        uses: actions/cache@v3
+        with:
+          path: ~/.local
+          key: "poetry-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ inputs.poetry-version }}-0"
+
+      - name: Setup Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: "${{ inputs.poetry-version }}"
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Cache dependencies
+        id: cache-deps
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: testdeps-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+
+      - name: 🗂 Install dependencies
+        run: poetry install --no-interaction --no-root --only test
+        if: steps.cache-deps.outputs.cache-hit != 'true'
+
+      - name: 🗂 Install project
+        run: poetry install --no-interaction --only-root
+
+      - name: ☑ Run unit tests
+        run: |
+          source $VENV
+          ${{ inputs.commands }}
+
+      - name: 📤 Upload coverage data to coveralls.io
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          flag-name: ${{ runner.os }}-python${{ matrix.python }}
+          parallel: true

@@ -1,4 +1,5 @@
 # Cf. https://github.com/pyTooling/Actions/#reusable-workflows
+# Pypi and TestPypi publication: https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/
 name: Build and Test
 on:
   workflow_call:

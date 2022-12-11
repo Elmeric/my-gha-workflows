@@ -1,0 +1,17 @@
+name: Coverage Collection
+
+on:
+  workflow_call:
+
+jobs:
+
+  Coveralls:
+    name: 📤 Publish Coverage Data to coveralls.io
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Coveralls Finished
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          parallel-finished: true
