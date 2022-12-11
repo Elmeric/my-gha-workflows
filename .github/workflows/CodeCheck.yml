@@ -54,7 +54,7 @@ jobs:
 
       - name: 🗂 Install dependencies
         shell: bash
-        run: poetry install --no-interaction --no-root --only dev
+        run: poetry install --no-interaction --no-root --with dev
         if: steps.cache-deps.outputs.cache-hit != 'true'
 
       - name: 🗂 Install project
