@@ -45,6 +45,7 @@ jobs:
         with:
           path: ~/.local
           key: "poetry-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ inputs.poetry-version }}-0"
+        if: ${{ runner.os != 'Windows' }}
 
       - name: Setup Poetry
         uses: snok/install-poetry@v1
@@ -59,6 +60,7 @@ jobs:
         with:
           path: .venv
           key: testdeps-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+        if: ${{ runner.os != 'Windows' }}
 
       - name: 🗂 Install dependencies
         run: poetry install --no-interaction --no-root --without dev,docs
