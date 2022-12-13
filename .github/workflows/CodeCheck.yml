@@ -36,7 +36,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.local
-          key: "poetry-${{ runner.os }}-py${{ inputs.python-version }}-${{ inputs.poetry-version }}-0"
+          key: "poetry-${{ runner.os }}-py${{ inputs.python_version }}-${{ inputs.poetry-version }}-0"
 
       - name: Setup Poetry
         uses: snok/install-poetry@v1
@@ -50,7 +50,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: .venv
-          key: devdeps-${{ runner.os }}-py${{ inputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+          key: devdeps-${{ runner.os }}-py${{ inputs.python_version }}-${{ hashFiles('**/poetry.lock') }}
 
       - name: 🗂 Install dependencies
         shell: bash
