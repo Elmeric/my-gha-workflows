@@ -72,6 +72,7 @@ jobs:
       - name: ☑ Run unit tests
         run: |
           source $VENV
+          sudo apt update && sudo apt install -y libegl1-mesa-dev
           ${{ inputs.commands }}
 
       - name: 📤 Upload coverage data to coveralls.io
